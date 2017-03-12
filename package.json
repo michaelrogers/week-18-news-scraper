@@ -1,0 +1,28 @@
+{
+  "name": "week-18-news-scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelrogers/week-18-news-scraper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michaelrogers/week-18-news-scraper/issues"
+  },
+  "homepage": "https://github.com/michaelrogers/week-18-news-scraper#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "cheerio": "^0.22.0",
+    "express": "^4.15.2",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^4.8.6",
+    "morgan": "^1.8.1",
+    "request": "^2.81.0"
+  }
+}
