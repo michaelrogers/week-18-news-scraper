@@ -34,28 +34,6 @@ module.exports = {
     },
     removeComment: (req, res) => {
         console.log(req.body)
-        // const newComment = new Models.Comment(req.body);
-
-        // And save the new comment the db
-        // newComment.save(function (error, doc) {
-        //     if (error) { console.log(error); }
-        //     else {
-        //         // Use the article id to find and update it's comment
-        //         Models.Article.findOneAndUpdate({ "_id": req.params.id }, { "comment": doc._id })
-        //             .exec(function (err, doc) {
-        //                 if (err) {
-        //                     console.log(err);
-        //                 } else {
-        //                     res.redirect('back');
-        //                 }
-        //             });
-        //     }
-        // });
+        Models.Comment.remove({ "_id": req.params.id }, (error, doc) => res.redirect('../../saved'));
     },
-
-
-
-
-
-
 };

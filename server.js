@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000;
 mongoose.Promise = Promise;
 
 // Database configuration with mongoose
-mongoose.connect(MONGODB_URI || "mongodb://localhost/week18newsscraper");
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/week18newsscraper");
 const db = mongoose.connection;
 
 // Use morgan and body parser with our app

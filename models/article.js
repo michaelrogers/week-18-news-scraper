@@ -17,10 +17,10 @@ module.exports = mongoose.model(
             type: String,
             required: true
         },
-        comment: {
-            type: Array,
+        comment: [{
+            type: Schema.Types.ObjectId,
             ref: "Comment"
-        },
+        }],
         saved: {
             type: Boolean,
             required: true,
