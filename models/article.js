@@ -13,9 +13,19 @@ module.exports = mongoose.model(
             type: String,
             required: true
         },
+         blurb: {
+            type: String,
+            required: true
+        },
         comment: {
-            type: Schema.Types.ObjectId,
+            type: Array,
             ref: "Comment"
+        },
+        saved: {
+            type: Boolean,
+            required: true,
+            default: false
         }
-    })
+
+    }, {timestamps: true})
 );

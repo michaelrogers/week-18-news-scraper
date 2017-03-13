@@ -1,99 +1,76 @@
-const router = express.Router();
+'use strict';
+
+const router = require('express').Router();
 const Models = require('../models');
 
+//Scraping tools
+const request = require("request");
+const cheerio = require("cheerio");
+
 // A GET request to scrape the echojs website
-app.get("/scrape", function(req, res) {
-  // First, we grab the body of the html with request
-  request("http://www.echojs.com/", (error, response, html) => {
-    // Then, we load that into cheerio and save it to $ for a shorthand selector
-    const $ = cheerio.load(html);
-    // Now, we grab every h2 within an article tag, and do the following:
-    $("article h2").each(function(i, element) {
 
-      // Save an empty result object
-      const result = {};
+module.exports = {
+    scrapeWebsite: (req, res, next) => {
+      request({
+          url: "http://www.houstonchronicle.com/local",
+        //   har: {
+        //       url: "https://google.com"
+        //   }
+        }, (error, response, html) => {
+            
+          // Then, we load that into cheerio and save it to $ for a shorthand selector
+          const $ = cheerio.load(html);
+          $("div.prem-hl-item").each(function(i, element) {
 
-      // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this).children("a").text();
-      result.link = $(this).children("a").attr("href");
+            const result = {};
+            result.title = $(this).children("h2.headline").text().trim();
+            result.link = 'http://www.houstonchronicle.com' + $(this).find("h2.headline a").attr("href");
+            result.blurb = $(this).children("p.blurb").text().trim();
 
-      // Using our Article model, create a new entry
-      // This effectively passes the result object to the entry (and the title and link)
-      const entry = new Article(result);
+            // Using our Article model, create a new entry
+            // This effectively passes the result object to the entry (and the title and link)
+            const entry = new Models.Article(result);
 
-      // Now, save that entry to the db
-      entry.save((err, doc) => {
-        // Log any errors
-        console.log(err ? err : doc);
+            // Now, save that entry to the db
+            entry.save((err, doc) => {
+              console.log(err ? err : doc);
+            });
+        });
+      }); //End request
+    
+      // next();
+      res.redirect('back');
+    }, 
+
+    renderHome: (req, res) => {
+      Models.Article.find({}, (error, article) => {
+        error ? console.log(error) : res.render('../views/index', {article});
       });
+    },
 
-    });
-  });
-  // Tell the browser that we finished scraping the text
-  res.send("Scrape Complete");
-});
-
-// This will get the articles we scraped from the mongoDB
-app.get("/articles", function(req, res) {
-  // Grab every doc in the Articles array
-  Models.Article.find({}, function(error, doc) {
-    // Log any errors
-    if (error) {
-      console.log(error);
-    }
-    // Or send the doc to the browser as a json object
-    else {
-      res.json(doc);
-    }
-  });
-});
-
-// Grab an article by it's ObjectId
-app.get("/articles/:id", function(req, res) {
-  // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
-  Models.Article.findOne({ "_id": req.params.id })
-  // ..and populate all of the comment associated with it
-  .populate("comment")
-  // now, execute our query
-  .exec(function(error, doc) {
-    // Log any errors
-    if (error) {
-      console.log(error);
-    }
-    // Otherwise, send the doc to the browser as a json object
-    else {
-      res.json(doc);
-    }
-  });
-});
-
-
-// Create a new comment or replace an existing comment
-app.post("/articles/:id", function(req, res) {
-  // Create a new comment and pass the req.body to the entry
-  const newComment = new Models.Comment(req.body);
-
-  // And save the new comment the db
-  newComment.save(function(error, doc) {
-    // Log any errors
-    if (error) {
-      console.log(error);
-    }
-    // Otherwise
-    else {
-      // Use the article id to find and update it's comment
-      Article.findOneAndUpdate({ "_id": req.params.id }, { "comment": doc._id })
-      // Execute the above query
-      .exec(function(err, doc) {
-        // Log any errors
-        if (err) {
-          console.log(err);
-        }
-        else {
-          // Or send the document to the browser
-          res.send(doc);
-        }
+    saveArticle: (req, res) => {
+      Models.Article.findOneAndUpdate({"_id": (req.body._id)}, {saved: true},
+      (error) => {
+        error ? console.log(error) : res.redirect('back');
       });
-    }
-  });
-});
+    },
+
+     unsaveArticle: (req, res) => {
+      Models.Article.findOneAndUpdate({"_id": (req.body._id)}, {saved: false},
+      (error) => {
+        error ? console.log(error) : res.redirect('back');
+      });
+    },
+
+    viewSaved:  (req, res) => {
+      Models.Article.find({saved: true}).sort({updatedAt: -1}).populate("comment").exec((error, article) => {
+        error ? console.log(error) : res.render('../views/saved', {article})
+      });
+    },
+
+}
+
+
+
+
+
