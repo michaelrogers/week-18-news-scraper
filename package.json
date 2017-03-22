@@ -1,5 +1,5 @@
 {
-  "name": "week-18-news-scraper",
+  "name": "week-19-react-search",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/michaelrogers/week-18-news-scraper.git"
+    "url": "git+https://github.com/michaelrogers/week-19-react-search.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/michaelrogers/week-18-news-scraper/issues"
+    "url": "https://github.com/michaelrogers/week-19-react-search/issues"
   },
-  "homepage": "https://github.com/michaelrogers/week-18-news-scraper#readme",
+  "homepage": "https://github.com/michaelrogers/week-19-react-search#readme",
   "dependencies": {
     "body-parser": "^1.17.1",
     "cheerio": "^0.22.0",
